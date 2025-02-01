@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App</title>
+
+    <style>
+      body {
+          font-family: Arial, sans-serif;
+          background-color: #f4f4f9;
+          margin: 0;
+          padding: 0;
+      }
+      .container {
+          max-width: 600px;
+          margin: 50px auto;
+          padding: 20px;
+          background: #fff;
+          border-radius: 8px;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+          text-align: center;
+          color: #333;
+      }
+      form {
+          display: flex;
+          margin-bottom: 20px;
+      }
+      input[type="text"] {
+          flex: 1;
+          padding: 10px;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+      }
+      button {
+          padding: 10px 15px;
+          background-color: #007BFF;
+          color: white;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          margin-left: 10px;
+      }
+      button:hover {
+          background-color: #0056b3;
+      }
+      .task {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin: 10px 0;
+          padding: 10px;
+          background: #f9f9f9;
+          border: 1px solid #ddd;
+          border-radius: 4px;
+      }
+      .task p {
+          margin: 0;
+      }
+      .delete-btn {
+          background-color: #dc3545;
+      }
+      .delete-btn:hover {
+          background-color: #a71d2a;
+      }
+  </style>
+     
+</head>
+<body>
+
+ <div class="container">
+  
+  <h1>TODO LIST</h1>
+
+   <form method="post" action="/post">
+    <input type="text"  name="task_name" placeholder="Enter task..." required>
+     <button type="submit">Add</button>
+   </form>
+   
+   
+        
+      <h2>Tasks</h2>
+      {% if items %}
+      <div>
+        {% for item in items %}
+        <div class="task">
+          <p> <strong>{{item.name}}</strong></p>
+        </div>
+        <form method="post" action="/delete/{{item.id}}">
+          <button type="submit" class="delete_btn">Done</button>
+        </form>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p>No tasks available. Add a new task above!</p>
+      {% endif %}
+    
+     
+   </div>
+
+     
+</body>
+</html>

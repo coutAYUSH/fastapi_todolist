@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>todo</title>
+</head>
+<body>
+    <div>
+        <h3>Task List</h3>
+        <ul id="task-list"></ul>
+    </div>
+   
+    <script>
+         async function fetchtasks() {
+        try{
+            const response = await fetch("");
+            const tasks = await response.json();
+
+            const taskList = document.createElement("li");
+            taskList.innerHTML = "";
+
+            tasksforEach(taskelement => {
+                const listItem = document.createElement("li");
+                listItem.textContent = `${taskelement.task}`;
+                taskList.appendChild(listItem);
+                
+            });
+
+
+
+
+        } catch (error){
+            console.error("error fetching user: ", errror);
+        }
+        
+    }
+
+
+    window.onload = fetchtasks;
+    </script>
+</body>
+</html>
+
+
+
+<script>
+    async function val(){
+     const name = document.getElementById("task_name").value.trim();
+     
+     const data = {"task_name":name}
+       try {
+     const response = await fetch("http://127.0.0.1:8000/submit/", {
+         method : "POST",
+         headers: {"Content-Type": "application/json",},
+         body: JSON.stringify(data),
+     }) ;
+
+     const result = await response.json();
+     alert(result.message);
+    }
+    catch (error) {
+         alert("An error occured")
+    }
+
+ }
+
+ async function deltask(button) {
+         // Find the list item containing the button
+        
+         
+        const data = {"task_name":listItem}
+
+        try{
+         const response = await fetch("http://127.0.0.1:8000/delete/${t_id}",{
+           method: "DELETE",
+           headers: {"Content-Type": "application/json",},
+          
+         });
+
+         document.getElementById("task_{{task.name}}").remove();
+         const result = await response.json()
+        alert(result.message)
+        }
+        
+        catch(error){
+         alert("An error occured")
+        }
+     }
+
+
+
+    
+ </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@app.post("/submit/")
+def submit_data(data:Task, db:Session = Depends(get_db)):
+    item = db.query(Lists).filter(Lists.name == data.task_name).first()
+    if item:
+        raise HTTPException(status_code=409, detail="Task already exist")
+    new_task = Lists(name = data.task_name)
+    db.add(new_task)
+    db.commit()
+    db.refresh(new_task)
+    return {"message":"data recieved"}
+    
